@@ -10,14 +10,14 @@ const account = {
   amount: "$455,000.00" //MARYTODO: change to int and format with currency
 }
 const headerText = "Unit test header",
- interestRate = "1%",
+ numCols = 3,
  tableSelector = ".accounts-table";
 
 beforeEach(() => {
   wrapper = shallow(
     <AccountsTable
       header={headerText}
-      interestRate={interestRate}
+      numCols={3}
       accounts={{accountData:[account]}}
     />
   );
