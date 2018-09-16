@@ -13,7 +13,7 @@ class AccountsTable extends Component {
   _getBody() {
     const rows = this.props.accounts.accountData.map((account) => {
       return (
-        //MARYTODO: HOW TO PROPERLY ASSIGN KEYS
+        //MARYTODO: HOW TO PROPERLY ASSIGN
         <tr key={account.account}>
           <td key={account.account}>{account.account}</td>
           <td key={account.interestRate}>{account.interestRate}</td>
