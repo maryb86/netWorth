@@ -5,7 +5,7 @@ import '../../App.css';
 class AccountsTable extends Component {
 
   _getBody() {
-    const rows = this.props.accounts.accountData.map((account) => {
+    const rows = this.props.accounts.map((account) => {
       return (
         //MARYTODO: HOW TO PROPERLY ASSIGN KEYS
         <tr key={account.account}>
@@ -19,12 +19,21 @@ class AccountsTable extends Component {
     return rows;
   }
 
+  _getHeader() {
+    const headers = this.props.headers.map((header) => {
+      return (
+        <th key={header} scope="col">{header}</th>
+      )
+    });
+    return headers;
+  }
+
   render() {
     return (
       <table className="table accounts-table">
         <thead>
           <tr>
-            <th scope="col" colSpan={this.props.numCols}>{this.props.header}</th>
+            {this._getHeader()}
           </tr>
         </thead>
           <tbody>
@@ -36,9 +45,8 @@ class AccountsTable extends Component {
 }
 
 AccountsTable.propTypes = {
-  header: PropTypes.string.isRequired,
-  numCols: PropTypes.number.isRequired,
-  accounts: PropTypes.object.isRequired, //MARYTODO: CREATE OWN PROPTYPE OBJ TO COMPARE AGAINST
+  headers: PropTypes.arrayOf(PropTypes.string).isRequired,
+  accounts: PropTypes.arrayOf(PropTypes.object).isRequired, //MARYTODO: CREATE OWN PROPTYPE OBJ TO COMPARE AGAINST
 }
 
 export default AccountsTable;

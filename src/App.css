@@ -1,3 +1,7 @@
+.App {
+  max-width: 70%;
+}
+
 table th{
   text-align: left;
 }
