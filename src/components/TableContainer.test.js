@@ -1,8 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import TotalNetWorth from './TotalNetWorth';
+import TableContainer from './TableContainer';
+import UpperTable from './tables/UpperTable';
 
-it('renders TotalNetWorth without crashing', () => {
-  const TotalNetWorthWrapper = shallow(<TotalNetWorth />);
-  expect(TotalNetWorthWrapper.find(".net-worth-total")).toHaveLength(1);
+it('renders TableContainer without crashing', () => {
+  const TableContainerWrapper = shallow(<TableContainer />);
+  expect(TableContainerWrapper.find(".table-container")).toHaveLength(1);
+  expect(TableContainerWrapper.find(UpperTable)).toHaveLength(2);
 });

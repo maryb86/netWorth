@@ -7,9 +7,9 @@ class AccountsTable extends Component {
   _getBody() {
     const rows = this.props.accounts.map((account) => {
       return (
-        //MARYTODO: HOW TO PROPERLY ASSIGN KEYS
         <tr key={account.account}>
           <td key={account.account}>{account.account}</td>
+          {account.monthlyPayment ? <td key={account.monthlyPayment}>{account.monthlyPayment}</td> : null}
           <td key={account.interestRate}>{account.interestRate}</td>
           <td key={account.amount}>{account.amount}</td>
         </tr>

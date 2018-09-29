@@ -11,7 +11,9 @@ const accounts = {
 
 beforeEach(() => {
   wrapper = shallow(
-    <UpperTable />
+    <UpperTable
+      type="assets"
+    />
   );
 });
 

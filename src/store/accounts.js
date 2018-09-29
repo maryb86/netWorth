@@ -1,6 +1,6 @@
 const accounts = {
     assets: {
-        cashAndInvestments: [
+        shortTerm: [
             {
                 account: "Chequing",
                 interestRate: "0%", // MARYTODO: change to int and format with percent
@@ -56,7 +56,7 @@ const accounts = {
                 amount: "24000"
             },
         ],
-        longTermAssets: [
+        longTerm: [
             {
                 account: "Primary Income",
                 interestRate: "1%",
@@ -69,6 +69,54 @@ const accounts = {
             },
             {
                 account: "Other"
+            }
+        ]
+    },
+    liabilities: {
+        shortTerm: [
+            {
+                account: "Credit Card 1",
+                monthlyPayment: "200.00",
+                interestRate: "50%",
+                amount: "4342.00"
+            },
+            {
+                account: "Credit Card 2",
+                monthlyPayment: "150.00",
+                interestRate: "22%",
+                amount: "322.00"
+            }
+        ],
+        longTerm: [
+            {
+                account: "Mortgage 1",
+                monthlyPayment: "2000.00",
+                interestRate: "2.60%",
+                amount: "250999.00"
+            },
+            {
+                account: "Mortgage 2",
+                monthlyPayment: "3500.00",
+                interestRate: "5.40%",
+                amount: "632634.00"
+            },
+            {
+                account: "Line of Credit",
+                monthlyPayment: "500.00",
+                interestRate: "5%",
+                amount: "10000.00"
+            },
+            {
+                account: "Investment Loan",
+                monthlyPayment: "700.00",
+                interestRate: "6%",
+                amount: "10000.00"
+            },
+            {
+                account: "Student Loan"
+            },
+            {
+                account: "Car Loan"
             }
         ]
     } 

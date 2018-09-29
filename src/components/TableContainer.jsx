@@ -6,7 +6,12 @@ class TotalNetWorth extends Component {
   render() {
     return (
       <div className="table-container">
-        <UpperTable />
+        <UpperTable
+          type="assets"
+        />
+        <UpperTable
+          type="liabilities"
+        />
       </div>
     );
   }

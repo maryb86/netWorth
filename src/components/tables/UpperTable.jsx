@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../../App.css';
 import AccountsTable from './AccountsTable';
 import accounts from '../../store/accounts.js'
+import accountHeaders from '../../store/accountHeaders.js' //MARYTODO: MOVE TO MORE APPROPRIATE LOCATION
 
 class UpperTable extends Component {
 
@@ -25,29 +26,38 @@ class UpperTable extends Component {
     return total.toFixed(2);
   }
 
+  _getHeaders(term, headers) {
+    return [headers[term]].concat(headers.commonColumns)
+  }
+
   render() {
+    const type = this.props.type;
+    const headers = accountHeaders[type];
+    const shortTermHeaders = this._getHeaders("shortTerm", headers);
+    const longTermHeaders = this._getHeaders("longTerm", headers);
+
     return (
       <div className="upper-table">
         <table className="table">
           <thead>
             <tr>
-              <th>Assets</th>
+              <th>{accountHeaders[type].header}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td colSpan={2}>
+              <td colSpan={shortTermHeaders.length}>
                 <AccountsTable
-                  headers={["Cash and Investments", "Interest Rate"]}
-                  accounts={accounts.assets.cashAndInvestments}
+                  headers={shortTermHeaders}
+                  accounts={accounts[type].shortTerm}
                 />
               </td>
             </tr>
             <tr>
-              <td colSpan={2}>
+              <td colSpan={longTermHeaders.length}>
                 <AccountsTable
-                  headers={["Long Term Assets"]}
-                  accounts={accounts.assets.longTermAssets}
+                  headers={longTermHeaders}
+                  accounts={accounts[type].longTerm}
                 />
               </td>
             </tr>
@@ -55,7 +65,7 @@ class UpperTable extends Component {
           <tfoot>
               <tr>
                 <td>Total Assets</td>
-                <td>{this._getTotal(accounts.assets)}</td>
+                <td>{this._getTotal(accounts[type])}</td>
               </tr>
           </tfoot>
         </table>
