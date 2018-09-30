@@ -2,8 +2,8 @@ import {calcTotalForType, calcNetWorthTotal} from './calcUtil';
 
 const accounts = {
     assets: {
-      cash: [{amount: "100.00"},{amount: "200.00"}],
-      assets: [{amount: "300.00"},{amount: "400.00"}]
+      shortTerm: [{amount: "100.00"},{amount: "200.00"}],
+      longTerm: [{amount: "300.00"},{amount: "400.00"}]
     },
     liabilities: {
       shortTerm: [{amount: "50.00"},{amount: "60.00"}],
@@ -11,7 +11,7 @@ const accounts = {
 };
 
 it('returns total of all accounts when one set provided', () => {
-  expect(calcTotalForType({cash: accounts.assets.cash})).toEqual("300.00");
+  expect(calcTotalForType({shortTerm: accounts.assets.shortTerm})).toEqual("300.00");
 });
 
 it('returns total of all accounts when multiple sets provided', () => {
@@ -23,10 +23,26 @@ it('returns total of 0.00 when no accounts provided', () => {
 });
 
 it('ignores accounts without amounts', () => {
-  expect(calcTotalForType({cash: [{}]})).toEqual("0.00");
-  expect(calcTotalForType({cash: [{amount: "100.00"},{}]})).toEqual("100.00");
+  expect(calcTotalForType({shortTerm: [{}]})).toEqual("0.00");
+  expect(calcTotalForType({shortTerm: [{amount: "100.00"},{}]})).toEqual("100.00");
 });
 
-it('returns total for all account types provided', () => {
+it('throws error if amount is negative', () => {
+  expect(() => {
+    calcTotalForType({shortTerm: [{amount: "-100.00"}]});
+  }).toThrow();
+});
+
+it('calcs total net worth when assets and liabilities provided', () => {
   expect(calcNetWorthTotal(accounts)).toEqual("890.00");
+});
+
+it('calcs total net worth when liabilities not provided or 0.00', () => {
+  expect(calcNetWorthTotal({assets: accounts.assets})).toEqual("1000.00");
+  expect(calcNetWorthTotal({assets: accounts.assets, liabilities: {shortTerm: [{amount: "0.00"}]}})).toEqual("1000.00");
+});
+
+it('calcs total net worth when assets not provided or 0.00', () => {
+  expect(calcNetWorthTotal({liabilities: accounts.liabilities})).toEqual("-110.00");
+  expect(calcNetWorthTotal({liabilities: accounts.liabilities, assets: {shortTerm: [{amount: "0.00"}]}})).toEqual("-110.00");
 });

@@ -2,22 +2,17 @@ export function calcTotalForType(accounts) {
   const amounts = [0.00];
   let total = amounts[0];
   if (accounts) {
-
     Object.keys(accounts).forEach(account => {
-      if (accounts[account]) {
-
         accounts[account].map((account) => {
           let amount = 0.00;
-          if (account.amount && account.amount) {
+          if (account.amount) {
             amount = parseFloat(account.amount);
             if (amount < 0.00) {
               throw new Error(`Amount ${account.amount} is not positive. All amounts, including liabilities, should be positive.`)
             }
           }
-          return amount && amount >= 0.00 ? amounts.push(amount) : undefined;
+          return amounts.push(amount);
         });
-
-      }
     });
 
     if (amounts.length > 1){
