@@ -3,28 +3,10 @@ import '../../App.css';
 import AccountsTable from './AccountsTable';
 import accounts from '../../store/accounts.js'
 import accountHeaders from '../../store/accountHeaders.js' //MARYTODO: MOVE TO MORE APPROPRIATE LOCATION
+import getTotalByType from '../../util/totalsUtil'
+
 
 class UpperTable extends Component {
-
-  _getTotal(accounts) {
-    const amounts = [0.00];
-    let total = amounts[0];
-    if (accounts) {
-      Object.keys(accounts).forEach(account => {
-        if (accounts[account]) {
-          accounts[account].map((account) => {
-            return account.amount ? amounts.push(parseFloat(account.amount)) : undefined;
-          });
-        }
-      });
-
-      if (amounts.length > 1){
-        total = amounts.reduce((accumulator, currentValue) => accumulator + currentValue);
-      }
-    }
-
-    return total.toFixed(2);
-  }
 
   _getHeaders(term, headers) {
     return [headers[term]].concat(headers.commonColumns)
@@ -65,7 +47,7 @@ class UpperTable extends Component {
           <tfoot>
               <tr>
                 <td>Total Assets</td>
-                <td>{this._getTotal(accounts[type])}</td>
+                <td>{getTotalByType(accounts[type])}</td>
               </tr>
           </tfoot>
         </table>
