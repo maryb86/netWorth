@@ -3,7 +3,7 @@ import '../../App.css';
 import AccountsTable from './AccountsTable';
 import accounts from '../../store/accounts.js'
 import accountHeaders from '../../store/accountHeaders.js' //MARYTODO: MOVE TO MORE APPROPRIATE LOCATION
-import getTotalByType from '../../util/totalsUtil'
+import calcTotalForType from '../../util/calcUtil'
 
 
 class UpperTable extends Component {
@@ -47,7 +47,7 @@ class UpperTable extends Component {
           <tfoot>
               <tr>
                 <td>Total Assets</td>
-                <td>{getTotalByType(accounts[type])}</td>
+                <td>{calcTotalForType(accounts[type])}</td>
               </tr>
           </tfoot>
         </table>
