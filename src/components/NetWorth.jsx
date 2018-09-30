@@ -47,7 +47,7 @@ class NetWorth extends Component {
           <thead>
             <tr>
               <th>Net Worth</th>
-              <th>{calcNetWorthTotal(accounts)}</th>
+              <th>{new Intl.NumberFormat("en-CA", {style: "currency", currency: "CAD"}).format(calcNetWorthTotal(accounts))}</th>
             </tr>
           </thead>
         </table>
@@ -77,7 +77,7 @@ class NetWorth extends Component {
           <tfoot>
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 1}>Total Assets</td>
-              <td>{calcTotalForType(accounts.assets)}</td>
+              <td>{new Intl.NumberFormat("en-CA", {style: "currency", currency: "CAD"}).format(calcTotalForType(accounts.assets))}</td>
             </tr>
           </tfoot>
         </table>
@@ -107,7 +107,7 @@ class NetWorth extends Component {
           <tfoot>
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 2}>Total Liabilities</td>
-              <td>{calcTotalForType(accounts.liabilities)}</td>
+              <td>{new Intl.NumberFormat("en-CA", {style: "currency", currency: "CAD"}).format(calcTotalForType(accounts.liabilities))}</td>
             </tr>
           </tfoot>
         </table>

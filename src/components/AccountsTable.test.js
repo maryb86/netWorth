@@ -5,10 +5,13 @@ import AccountsTable from './AccountsTable';
 let wrapper;
 const account = [{
       account: "Chequing",
-      interestRate: "1%", // MARYTODO: change to int and format with percent
-      amount: "$1,000.00" //MARYTODO: change to int and format with currency
+      interestRate: "1%",
+      amount: "1000.00"
 }];
 const tableSelector = ".accounts-table";
+const getFormattedAmount = ((amount) => {
+  return new Intl.NumberFormat("en-CA", {style: "currency", currency: "CAD"}).format(amount);
+})
 
 beforeEach(() => {
   wrapper = shallow(
@@ -24,7 +27,7 @@ it('renders AccountsTable without crashing', () => {
   expect(wrapper.find(tableSelector)).toHaveLength(1);
   expect(rows.childAt(0).text()).toEqual(account[0].account);
   expect(rows.childAt(1).text()).toEqual(account[0].interestRate);
-  expect(rows.childAt(2).text()).toEqual(account[0].amount);
+  expect(rows.childAt(2).text()).toEqual(getFormattedAmount(account[0].amount));
 });
 
 it('still renders fields when values are empty', () => {
@@ -52,5 +55,5 @@ it('renders monthly payment column if it exists', () => {
   expect(rows.childAt(0).text()).toEqual(accountWithMonthly[0].account);
   expect(rows.childAt(1).text()).toEqual(accountWithMonthly[0].monthlyPayment);
   expect(rows.childAt(2).text()).toEqual(accountWithMonthly[0].interestRate);
-  expect(rows.childAt(3).text()).toEqual(accountWithMonthly[0].amount);
+  expect(rows.childAt(3).text()).toEqual(getFormattedAmount(account[0].amount));
 });

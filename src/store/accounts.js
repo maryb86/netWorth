@@ -3,8 +3,8 @@ const accounts = {
         shortTerm: [
             {
                 account: "Chequing",
-                interestRate: "0%", // MARYTODO: change to int and format with percent
-                amount: "2000.00" //MARYTODO: change to int and format with currency
+                interestRate: "0%",
+                amount: "2000.00"
             },
             {
                 account: "Savings for Taxes",
