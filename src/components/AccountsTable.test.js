@@ -27,11 +27,26 @@ it('renders AccountsTable without crashing', () => {
   expect(rows.childAt(2).text()).toEqual(account[0].amount);
 });
 
-it('displays monthly payment column if it exists', () => {
+it('still renders fields when values are empty', () => {
+  wrapper.setProps({accounts: [{
+    account: "",
+    interestRate: "",
+    amount: ""
+  }]});
+
+  const rows = wrapper.find(`${tableSelector} tr`);
+
+  expect(wrapper.find(tableSelector)).toHaveLength(1);
+  expect(rows.childAt(0).text()).toBeEmpty;
+  expect(rows.childAt(1).text()).toBeEmpty;
+  expect(rows.childAt(2).text()).toBeEmpty;
+});
+
+it('renders monthly payment column if it exists', () => {
   const monthlyPayment = "100.00";
   const accountWithMonthly = [Object.assign({monthlyPayment: monthlyPayment}, account[0])];
 
-  wrapper.setProps({ accounts: accountWithMonthly });
+  wrapper.setProps({accounts: accountWithMonthly});
   const rows = wrapper.find(`${tableSelector} tr`);
 
   expect(rows.childAt(0).text()).toEqual(accountWithMonthly[0].account);

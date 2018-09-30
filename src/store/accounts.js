@@ -68,7 +68,9 @@ const accounts = {
                 amount: "1564321.00"
             },
             {
-                account: "Other"
+                account: "Other",
+                interestRate: "",
+                amount: ""
             }
         ]
     },
@@ -113,10 +115,16 @@ const accounts = {
                 amount: "10000.00"
             },
             {
-                account: "Student Loan"
+                account: "Student Loan",
+                monthlyPayment: "",
+                interestRate: "",
+                amount: ""
             },
             {
-                account: "Car Loan"
+                account: "Car Loan",
+                monthlyPayment: "",
+                interestRate: "",
+                amount: ""
             }
         ]
     } 

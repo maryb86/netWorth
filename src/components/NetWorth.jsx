@@ -63,9 +63,9 @@ class NetWorth extends Component {
               <th></th>
             </tr>
           </tbody>
-            <AccountsTable
+          <AccountsTable
               accounts={accounts.assets.shortTerm}
-            />
+          />
           <tbody>
             <tr>
               {headers.longTermAssets}
@@ -73,7 +73,7 @@ class NetWorth extends Component {
           </tbody>
           <AccountsTable
               accounts={accounts.assets.longTerm}
-            />
+          />
           <tfoot>
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 1}>Total Assets</td>
