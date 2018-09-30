@@ -8,7 +8,7 @@ class AccountsTable extends Component {
     const rows = this.props.accounts.map((account) => {
       return (
         <tr key={account.account}>
-          <td key={account.account}>{account.account}</td>
+          <td key={account.account} className="account">{account.account}</td>
           {account.monthlyPayment ? <td key={account.monthlyPayment}>{account.monthlyPayment}</td> : null}
           <td key={account.interestRate}>{account.interestRate}</td>
           <td key={account.amount}>{account.amount}</td>
@@ -34,6 +34,7 @@ class AccountsTable extends Component {
         <thead>
           <tr>
             {this._getHeader()}
+            <th></th>
           </tr>
         </thead>
           <tbody>

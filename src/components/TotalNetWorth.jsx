@@ -5,7 +5,7 @@ import calcTotalNetWorth from '../util/calcUtil'
 class TotalNetWorth extends Component {
   render() {
     return (
-      <div className="net-worth-total">{calcTotalNetWorth(this.props.accounts)}</div>
+      <span className="net-worth-total">{calcTotalNetWorth(this.props.accounts)}</span>
     );
   }
 }

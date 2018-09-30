@@ -1,7 +1,35 @@
 .App {
   max-width: 70%;
+  margin-top: 10px;
 }
 
-table th{
+td.upper-table-container, td.accounts-table-container {
+  padding: 0;
+  border-top: none;
+}
+
+.upper-table-container > table {
+  margin-bottom: 40px;
+}
+
+table th, table td, tfoot td {
+  text-align: right;
+}
+
+table td.account, table th:first-child, tfoot td:first-child {
   text-align: left;
+}
+
+tfoot {
+  border-bottom: 3px double #dee2e6;
+  font-weight: bold;
+}
+
+.net-worth{
+  text-align: right;
+}
+
+.currency-dropdown{
+  text-align: right;
+  margin-bottom: 10px;
 }

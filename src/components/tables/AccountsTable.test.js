@@ -25,7 +25,7 @@ it('renders AccountsTable without crashing', () => {
   const rows = wrapper.find(`${tableSelector} tbody tr`);
 
   expect(wrapper.find(tableSelector)).toHaveLength(1);
-  expect(wrapper.find(`${tableSelector} th`).text()).toEqual(headerText[0]);
+  expect(wrapper.find(`${tableSelector} th:first-child`).text()).toEqual(headerText[0]);
   expect(rows.childAt(0).text()).toEqual(account[0].account);
   expect(rows.childAt(1).text()).toEqual(account[0].interestRate);
   expect(rows.childAt(2).text()).toEqual(account[0].amount);

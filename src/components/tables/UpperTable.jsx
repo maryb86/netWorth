@@ -8,8 +8,12 @@ import calcTotalForType from '../../util/calcUtil'
 
 class UpperTable extends Component {
 
-  _getHeaders(term, headers) {
-    return [headers[term]].concat(headers.commonColumns)
+  _getHeaders(term, availableHeaders) {
+    let headers = [availableHeaders[term]];
+    if (term === "shortTerm") {
+      headers = headers.concat(availableHeaders.commonColumns)
+    }
+    return headers;
   }
 
   render() {
@@ -19,39 +23,37 @@ class UpperTable extends Component {
     const longTermHeaders = this._getHeaders("longTerm", headers);
 
     return (
-      <div className="upper-table">
-        <table className="table">
-          <thead>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>{accountHeaders[type].header}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colSpan={shortTermHeaders.length + 1} className="accounts-table-container">
+              <AccountsTable
+                headers={shortTermHeaders}
+                accounts={accounts[type].shortTerm}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={longTermHeaders.length + 1} className="accounts-table-container">
+              <AccountsTable
+                headers={longTermHeaders}
+                accounts={accounts[type].longTerm}
+              />
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
             <tr>
-              <th>{accountHeaders[type].header}</th>
+              <td>Total Assets</td>
+              <td>{calcTotalForType(accounts[type])}</td>
             </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan={shortTermHeaders.length}>
-                <AccountsTable
-                  headers={shortTermHeaders}
-                  accounts={accounts[type].shortTerm}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={longTermHeaders.length}>
-                <AccountsTable
-                  headers={longTermHeaders}
-                  accounts={accounts[type].longTerm}
-                />
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-              <tr>
-                <td>Total Assets</td>
-                <td>{calcTotalForType(accounts[type])}</td>
-              </tr>
-          </tfoot>
-        </table>
-      </div>
+        </tfoot>
+      </table>
     );
   }
 }

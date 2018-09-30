@@ -9,9 +9,19 @@ class NetWorth extends Component {
   render() {
     return (
       <div>
+        <h2>Tracking your Networth</h2>
         <CurrencyDropdown />
-        <TotalNetWorth accounts={accounts}/>
-        <TableContainer />
+        <table className="table">
+          <thead>
+              <tr>
+                <th>Net Worth</th>
+                <th className="net-worth">
+                  <TotalNetWorth accounts={accounts}/>
+                </th>
+              </tr>
+            </thead>
+            <TableContainer />
+        </table>
       </div>
     );
   }

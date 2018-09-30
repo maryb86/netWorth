@@ -18,6 +18,6 @@ beforeEach(() => {
 });
 
 it('renders UpperTable without crashing', () => {
-  expect(wrapper.find(".upper-table")).toHaveLength(1);
+  expect(wrapper.find("table.table")).toHaveLength(1);
   expect(wrapper.find(AccountsTable)).toHaveLength(2);
 });

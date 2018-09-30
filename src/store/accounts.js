@@ -53,7 +53,7 @@ const accounts = {
             {
                 account: "Investment 5",
                 interestRate: "0%",
-                amount: "24000"
+                amount: "24000.00"
             },
         ],
         longTerm: [
