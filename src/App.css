@@ -29,7 +29,7 @@ tfoot {
   text-align: right;
 }
 
-.currency-dropdown{
-  text-align: right;
+.btn-group{
+  float: right;
   margin-bottom: 10px;
 }

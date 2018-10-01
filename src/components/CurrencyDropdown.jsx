@@ -1,29 +1,33 @@
 import React, { Component } from 'react';
 import '../App.css';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
+
+const currencies=["CAD", "USD", "MXN", "EUR", "GBP", "CHF", "SEK", "AUD", "CNY", "YEN"];
 
 class CurrencyDropdown extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeCurrency: currencies[0]
+    }
+  }
+
+  _getMenuItems(activeCurrency) {
+    return currencies.map((currency) => {
+      const isActive = currency === activeCurrency;
+      if (isActive) {
+        return <MenuItem eventKey={currency} key={currency} bsStyle="default" active>{currency}</MenuItem>
+      }
+      return <MenuItem eventKey={currency} key={currency} bsStyle="default">{currency}</MenuItem>
+    });
+  }
+
   render() {
     return (
-      <div className="currency-dropdown">
-        <div className="btn-group">
-            <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Currency
-            </button>
-            <div className="dropdown-menu">
-                {/* MARYTODO: IMPORT LIST OF CURRENCIES, LOOP TO RENDER */}
-                <a className="dropdown-item">CAD</a> {/* Canadian Dollar */}
-                <a className="dropdown-item">USD</a> {/* American Dollar */}
-                <a className="dropdown-item">MXN</a> {/* Mexican Peso */}
-                <a className="dropdown-item">EUR</a> {/* Euro */}
-                <a className="dropdown-item">GBP</a> {/* British Pound */}
-                <a className="dropdown-item">CHF</a> {/* Swiss Franc */}
-                <a className="dropdown-item">SEK</a> {/* Swedish Krona */}
-                <a className="dropdown-item">AUD</a> {/* Australian Dollar */}
-                <a className="dropdown-item">CNY</a> {/* Chinese Yuan */}
-                <a className="dropdown-item">YEN</a> {/* Japanese Yen */}
-            </div>
-        </div>
-      </div>
+      <DropdownButton title="Currency" id="currency-dropdown">
+        {this._getMenuItems(this.state.activeCurrency)}
+      </DropdownButton>
     );
   }
 }
