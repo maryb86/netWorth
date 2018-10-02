@@ -6,7 +6,17 @@ import {calcTotalForType, calcNetWorthTotal} from '../util/calcUtil'
 import accounts from '../store/accounts.js'
 import accountHeaders from '../store/accountHeaders.js' //MARYTODO: MOVE TO MORE APPROPRIATE LOCATION
 
+const currencies=["CAD", "USD", "MXN", "EUR", "GBP", "CHF", "SEK", "AUD", "CNY", "YEN"];
+
 class NetWorth extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      currency: currencies[0],
+      activeCurrency: "CAD"
+    }
+  }
 
   //MARYTODO: ERROR HANDLING IN BOTH FUNCTIONS
   _getShortTermHeaders(type) {
@@ -29,6 +39,20 @@ class NetWorth extends Component {
     )
   }
 
+  handleCurrencySelect(eventKey) {
+    if (currencies.includes(eventKey)) {
+      //BASE IS EURO (FREE VERSION OF SERVICE)
+      fetch(`http://data.fixer.io/api/latest?access_key=9571c54f89a73e563b9aeb1678987e5a&symbols=${eventKey}&format=1`)
+        .then(function(currencyData) {
+          return currencyData.json();
+        })
+        .then(function(currencyData) {
+          console.log(currencyData.rates[eventKey]);
+
+        });
+    }
+  }
+
   render() {
     //MARYTODO: SIMPLIFY headers obj MORE?
     //MARYTODO: MAKE COLSPAN MORE COMMON EVERYWHERE?
@@ -42,7 +66,11 @@ class NetWorth extends Component {
     return (
       <div>
         <h2>Tracking your Networth</h2>
-        <CurrencyDropdown />
+        <CurrencyDropdown 
+          currencies={currencies} 
+          activeCurrency={this.state.activeCurrency} 
+          handleCurrencySelect={this.handleCurrencySelect}
+        />
         <table className="table">
           <thead>
             <tr>

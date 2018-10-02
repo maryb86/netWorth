@@ -1,32 +1,30 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import '../App.css';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
-const currencies=["CAD", "USD", "MXN", "EUR", "GBP", "CHF", "SEK", "AUD", "CNY", "YEN"];
-
 class CurrencyDropdown extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeCurrency: currencies[0]
-    }
+  static propTypes = {
+    activeCurrency: PropTypes.string.isRequired,
+    currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
+    handleCurrencySelect: PropTypes.func.isRequired
   }
 
   _getMenuItems(activeCurrency) {
-    return currencies.map((currency) => {
+    return this.props.currencies.map((currency) => {
       const isActive = currency === activeCurrency;
       if (isActive) {
-        return <MenuItem eventKey={currency} key={currency} bsStyle="default" active>{currency}</MenuItem>
+        return <MenuItem onSelect={this.props.handleCurrencySelect} eventKey={currency} key={currency} bsStyle="default" active>{currency}</MenuItem>
       }
-      return <MenuItem eventKey={currency} key={currency} bsStyle="default">{currency}</MenuItem>
+      return <MenuItem onSelect={this.props.handleCurrencySelect} eventKey={currency} key={currency} bsStyle="default">{currency}</MenuItem>
     });
   }
 
   render() {
     return (
       <DropdownButton title="Currency" id="currency-dropdown">
-        {this._getMenuItems(this.state.activeCurrency)}
+        {this._getMenuItems(this.props.activeCurrency)}
       </DropdownButton>
     );
   }

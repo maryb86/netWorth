@@ -3,12 +3,21 @@ import { shallow } from 'enzyme';
 import { MenuItem } from 'react-bootstrap';
 import CurrencyDropdown from './CurrencyDropdown';
 
-it('renders 10 currencies in a dropdown list', () => {
-  const currencyDropdown = shallow(<CurrencyDropdown />);
-  expect(currencyDropdown.find(MenuItem)).toHaveLength(10);
-});
+const currencies=["CAD", "USD", "MXN", "EUR", "GBP", "CHF", "SEK", "AUD", "CNY", "YEN"];
+let currencyDropdownWrapper;
+const handleCurrencySelect = () => {};
 
-it('defaults active currency to CAD', () => {
-  const currencyDropdown = shallow(<CurrencyDropdown />);
-  expect(currencyDropdown.find(MenuItem).first().props().children).toEqual("CAD");
+beforeEach(() => {
+  currencyDropdownWrapper = shallow(
+    <CurrencyDropdown 
+      currencies={currencies} 
+      activeCurrency="CAD"
+      handleCurrencySelect={handleCurrencySelect}
+    />
+  );
+})
+
+
+it('renders 10 currencies in a dropdown list', () => {
+  expect(currencyDropdownWrapper.find(MenuItem)).toHaveLength(10);
 });
