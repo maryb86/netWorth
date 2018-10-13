@@ -9,13 +9,14 @@ const account = [{
       amount: "1000.00"
 }];
 const tableSelector = ".accounts-table";
-const getFormattedAmount = ((amount) => {
-  return new Intl.NumberFormat("en-CA", {style: "currency", currency: "CAD"}).format(amount);
+const getFormattedAmount = ((amount, currency) => {
+  return new Intl.NumberFormat("en-CA", {style: "currency", currency: currency || "CAD"}).format(amount);
 })
 
 beforeEach(() => {
   wrapper = shallow(
     <AccountsTable
+      currency="CAD"
       accounts={account}
     />
   );
@@ -53,7 +54,17 @@ it('renders monthly payment column if it exists', () => {
   const rows = wrapper.find(`${tableSelector} tr`);
 
   expect(rows.childAt(0).text()).toEqual(accountWithMonthly[0].account);
-  expect(rows.childAt(1).text()).toEqual(accountWithMonthly[0].monthlyPayment);
+  expect(rows.childAt(1).text()).toEqual(getFormattedAmount(accountWithMonthly[0].monthlyPayment));
   expect(rows.childAt(2).text()).toEqual(accountWithMonthly[0].interestRate);
   expect(rows.childAt(3).text()).toEqual(getFormattedAmount(account[0].amount));
+});
+
+it('renders numbers in currency chosen', () => {
+  const currency = "MXN";
+  wrapper.setProps({currency: currency}); //MX$2,000.00
+  const rows = wrapper.find(`${tableSelector} tr`);
+
+  expect(rows.childAt(0).text()).toEqual(account[0].account);
+  expect(rows.childAt(1).text()).toEqual(account[0].interestRate);
+  expect(rows.childAt(2).text()).toEqual(getFormattedAmount(account[0].amount, currency));
 });

@@ -8,10 +8,11 @@ class AccountsTable extends Component {
       return (
         <tr key={account.account}>
           <td key={0} className="account">{account.account}</td>
-          {account.hasOwnProperty('monthlyPayment') ? <td key={1}>{account.monthlyPayment}</td> : null}
+          {account.hasOwnProperty('monthlyPayment') ? 
+            <td key={1}>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.props.currency}).format(account.monthlyPayment)}</td> : null}
           <td key={2}>{account.interestRate}</td>
           <td key={3}>
-            {new Intl.NumberFormat("en-CA", {style: "currency", currency: "CAD"}).format(account.amount)}
+            {new Intl.NumberFormat("en-CA", {style: "currency", currency: this.props.currency}).format(account.amount)}
           </td>
         </tr>
       )

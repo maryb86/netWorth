@@ -16,6 +16,7 @@ class NetWorth extends Component {
       currency: currencies[0],
       activeCurrency: "CAD"
     }
+    this.handleCurrencySelect = this.handleCurrencySelect.bind(this);
   }
 
   //MARYTODO: ERROR HANDLING IN BOTH FUNCTIONS
@@ -39,19 +40,25 @@ class NetWorth extends Component {
     )
   }
 
+  _updateCurrency(currency){
+    this.setState({
+      activeCurrency: currency
+    });
+  };
+
   handleCurrencySelect(eventKey) {
-    if (currencies.includes(eventKey)) {
+    const currency = eventKey;
+    if (currencies.includes(currency)) {
       //BASE IS EURO (FREE VERSION OF SERVICE)
       fetch(`http://data.fixer.io/api/latest?access_key=9571c54f89a73e563b9aeb1678987e5a&symbols=${eventKey}&format=1`)
-        .then(function(currencyData) {
+        .then((currencyData) => {
           return currencyData.json();
         })
-        .then(function(currencyData) {
-          console.log(currencyData.rates[eventKey]);
-
+        .then((currencyData) => {
+          this._updateCurrency(currency);
         });
     }
-  }
+  };
 
   render() {
     //MARYTODO: SIMPLIFY headers obj MORE?
@@ -75,7 +82,8 @@ class NetWorth extends Component {
           <thead>
             <tr>
               <th>Net Worth</th>
-              <th>{new Intl.NumberFormat("en-CA", {style: "currency", currency: "CAD"}).format(calcNetWorthTotal(accounts))}</th>
+              {/* MARYTODO: change locale when currency changes */}
+              <th>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency}).format(calcNetWorthTotal(accounts))}</th>
             </tr>
           </thead>
         </table>
@@ -92,6 +100,7 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
+              currency={this.state.activeCurrency}
               accounts={accounts.assets.shortTerm}
           />
           <tbody>
@@ -100,12 +109,13 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
+              currency={this.state.activeCurrency}
               accounts={accounts.assets.longTerm}
           />
           <tfoot>
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 1}>Total Assets</td>
-              <td>{new Intl.NumberFormat("en-CA", {style: "currency", currency: "CAD"}).format(calcTotalForType(accounts.assets))}</td>
+              <td>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency}).format(calcTotalForType(accounts.assets))}</td>
             </tr>
           </tfoot>
         </table>
@@ -122,6 +132,7 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
+            currency={this.state.activeCurrency}
             accounts={accounts.liabilities.shortTerm}
           />
           <tbody>
@@ -130,12 +141,13 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
+              currency={this.state.activeCurrency}
               accounts={accounts.liabilities.longTerm}
             />
           <tfoot>
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 2}>Total Liabilities</td>
-              <td>{new Intl.NumberFormat("en-CA", {style: "currency", currency: "CAD"}).format(calcTotalForType(accounts.liabilities))}</td>
+              <td>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency}).format(calcTotalForType(accounts.liabilities))}</td>
             </tr>
           </tfoot>
         </table>
