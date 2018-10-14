@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
 import '../App.css';
+import {convert} from '../util/calcUtil.js';
 
 class AccountsTable extends Component {
+
+  _formatNumber(number) {
+    const convertedNumber = convert(
+      number, 
+      {baseRate: this.props.baseRate, rate: this.props.exchangeRate}
+    ).toFixed(2);
+    return new Intl.NumberFormat("en-CA", {minimumFractionDigits: 2}).format(convertedNumber);
+  }
 
   _getBody() {
     const rows = this.props.accounts.map((account) => {
       return (
         <tr key={account.account}>
           <td key={0} className="account">{account.account}</td>
-          {account.hasOwnProperty('monthlyPayment') ? 
-            <td key={1}>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.props.currency}).format(account.monthlyPayment)}</td> : null}
+            {account.hasOwnProperty('monthlyPayment') ? 
+            <td key={1}>{this._formatNumber(account.monthlyPayment)}</td> : null}
           <td key={2}>{account.interestRate}</td>
-          <td key={3}>
-            {new Intl.NumberFormat("en-CA", {style: "currency", currency: this.props.currency}).format(account.amount)}
-          </td>
+          <td key={3}>{this._formatNumber(account.amount)}</td>
         </tr>
       )
     })

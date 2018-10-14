@@ -46,3 +46,15 @@ it('calcs total net worth when assets not provided or 0.00', () => {
   expect(calcNetWorthTotal({liabilities: accounts.liabilities})).toEqual("-110.00");
   expect(calcNetWorthTotal({liabilities: accounts.liabilities, assets: {shortTerm: [{amount: "0.00"}]}})).toEqual("-110.00");
 });
+
+it('converts if exchange rate provided', () => {
+  expect(calcNetWorthTotal(accounts, {rate: 1.1})).toEqual("979.00");
+});
+
+it('returns amount if exchange rate not provided', () => {
+  expect(calcNetWorthTotal(accounts)).toEqual("890.00");
+});
+
+it('converts to euro before final conversion', () => {
+  expect(calcNetWorthTotal(accounts, {baseRate: 1.1, rate: 1.2})).toEqual("1174.80");
+});
