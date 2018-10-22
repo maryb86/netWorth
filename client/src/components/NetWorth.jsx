@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import '../App.css';
 import CurrencyDropdown from './CurrencyDropdown';
 import AccountsTable from './AccountsTable';
-import {calcTotalForType, calcNetWorthTotal} from '../util/calcUtil'
 import accounts from '../store/accounts.js'
 import accountHeaders from '../store/accountHeaders.js' //MARYTODO: MOVE TO MORE APPROPRIATE LOCATION
 import {getBaseRate, getExchangeRate} from '../services/CurrencyService.js';
+import {calcTotalForType, calcNetWorthTotal} from '../services/CalcService.js';
 
 const currencies=["CAD", "USD", "MXN", "EUR", "GBP", "CHF", "SEK", "AUD", "CNY", "JPY"];
 
@@ -16,9 +16,46 @@ class NetWorth extends Component {
     this.state = {
       currency: currencies[0],
       activeCurrency: "CAD",
-      exchangeRate: 1
+      exchangeRate: 1,
+      totalAssets: 0.00,
+      totalLiabilities: 0.00,
+      totalNetWorth: 0.00
     }
-    this.handleCurrencySelect = this.handleCurrencySelect.bind(this);
+    this.handleCurrencySelect = this.handleCurrencySelect.bind(this); //MARYTODO: CAN THIS BE DONE WITH ARROW FUNCTIONS INSTEAD?
+  }
+
+  componentDidMount() {
+    this._updateTotals();
+  }
+
+  _updateTotals() {
+    Promise.all([
+      this._getTotalAssets(),
+      this._getTotalLiabilities(),
+      this._getTotalNetWorth()
+    ]).then((response) => {
+      this.setState({
+        totalAssets: response[0].total,
+        totalLiabilities: response[1].total,
+        totalNetWorth: response[2].total
+      });
+    });
+  }
+
+  _getRates() {
+    return {baseRate: this.state.baseRate, rate: this.state.exchangeRate}
+  }
+
+  _getTotalAssets() {
+    return calcTotalForType(accounts.assets, this._getRates());
+  }
+
+  _getTotalLiabilities() {
+    return calcTotalForType(accounts.liabilities, this._getRates());
+  }
+
+  _getTotalNetWorth() {
+    return calcNetWorthTotal(accounts, this._getRates())
   }
 
   //MARYTODO: ERROR HANDLING IN BOTH FUNCTIONS
@@ -55,6 +92,8 @@ class NetWorth extends Component {
       activeCurrency: currency,
       exchangeRate: exchangeRate,
       baseRate: baseRate
+    }, () => {
+      this._updateTotals();
     });
   };
 
@@ -98,7 +137,7 @@ class NetWorth extends Component {
               <th>Net Worth</th>
               {/* MARYTODO: change locale when currency changes */}
               <th>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency})
-                .format(calcNetWorthTotal(accounts, {baseRate: this.state.baseRate, rate: this.state.exchangeRate}))}</th>
+                .format(this.state.totalNetWorth)}</th>
             </tr>
           </thead>
         </table>
@@ -131,7 +170,7 @@ class NetWorth extends Component {
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 1}>Total Assets</td>
               <td>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency})
-                .format(calcTotalForType(accounts.assets, {baseRate: this.state.baseRate, rate: this.state.exchangeRate}))}</td>
+                .format(this.state.totalAssets)}</td>
             </tr>
           </tfoot>
         </table>
@@ -164,7 +203,7 @@ class NetWorth extends Component {
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 2}>Total Liabilities</td>
               <td>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency})
-                .format(calcTotalForType(accounts.liabilities, {baseRate:this.state.baseRate, rate: this.state.exchangeRate}))}</td>
+                .format(this.state.totalLiabilities)}</td>
             </tr>
           </tfoot>
         </table>
