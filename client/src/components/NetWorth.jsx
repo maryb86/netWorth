@@ -29,7 +29,6 @@ class NetWorth extends Component {
   }
 
   _updateTotals() {
-    debugger;
     Promise.all([
       this._getTotalAssets(),
       this._getTotalLiabilities(),
@@ -59,7 +58,6 @@ class NetWorth extends Component {
     return calcNetWorthTotal(accounts, this._getRates())
   }
 
-  //MARYTODO: ERROR HANDLING IN BOTH FUNCTIONS
   _getShortTermHeaders(type) {
     const headers = [accountHeaders[type].shortTerm].concat(accountHeaders[type].commonColumns);
     return headers.map((header) => {
@@ -69,7 +67,6 @@ class NetWorth extends Component {
     });
   }
 
-  //MARYTODO: ERROR HANDLING IN BOTH FUNCTIONS
   _getLongTermHeaders(type) {
     const longTermHeaders = accountHeaders[type];
 
@@ -99,7 +96,7 @@ class NetWorth extends Component {
   };
 
   handleCurrencySelect(eventKey) {
-     //MARYTODO: HANDLE ERRORS, WRITE UNIT TESTS
+     //MARYTODO: HANDLE ERRORS
     const currency = eventKey;
     let baseRate = this.state.baseRate
     if (currencies.includes(currency)) {
@@ -111,7 +108,9 @@ class NetWorth extends Component {
       .then((exchangeRate) => {
         this.updateCurrency(currency, exchangeRate, baseRate);
       });
-    }    
+    } else {
+      console.error(`Invalid currency selected. Must be one of: ${currencies.toString()}`)
+    } 
   };
 
   render() {

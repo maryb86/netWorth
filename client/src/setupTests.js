@@ -1,4 +1,4 @@
-// MARYTODO: THIS IS JUST AN EXAMPLE, REMOVE THIS IF NO NEED TO MOCK
+//THIS IS JUST AN EXAMPLE, REMOVE THIS IF NO NEED TO MOCK
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
