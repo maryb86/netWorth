@@ -11,7 +11,8 @@
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.5.1",
     "react-scripts": "1.1.5",
-    "react-test-renderer": "^16.5.1"
+    "react-test-renderer": "^16.5.1",
+    "sinon": "^7.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

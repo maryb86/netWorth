@@ -29,6 +29,7 @@ class NetWorth extends Component {
   }
 
   _updateTotals() {
+    debugger;
     Promise.all([
       this._getTotalAssets(),
       this._getTotalLiabilities(),
