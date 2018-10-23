@@ -1,4 +1,4 @@
-const accountHeaders = { // MARYTODO:  MIXING OF HEADERS AND DATA IS WEIRD HERE
+const accountHeaders = {
     assets: {
         header: "Assets",
         commonColumns: ["Interest Rate"],

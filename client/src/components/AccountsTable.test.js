@@ -18,6 +18,8 @@ beforeEach(() => {
     <AccountsTable
       currency="CAD"
       accounts={account}
+      baseRate={1}
+      exchangeRate={1}
     />
   );
 });

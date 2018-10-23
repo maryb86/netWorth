@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import '../App.css';
 import {convert} from '../util/calcUtil.js';
 
 class AccountsTable extends Component {
+
+  static propTypes = {
+    baseRate: PropTypes.number.isRequired,
+    exchangeRate: PropTypes.number.isRequired,
+    accounts: PropTypes.array.isRequired
+  }
 
   _formatNumber(number) {
     const convertedNumber = convert(

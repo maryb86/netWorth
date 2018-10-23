@@ -3,7 +3,7 @@ import '../App.css';
 import CurrencyDropdown from './CurrencyDropdown';
 import AccountsTable from './AccountsTable';
 import accounts from '../store/accounts.js'
-import accountHeaders from '../store/accountHeaders.js' //MARYTODO: MOVE TO MORE APPROPRIATE LOCATION
+import accountHeaders from '../store/accountHeaders.js'
 import {getBaseRate, getExchangeRate} from '../services/CurrencyService.js';
 import {calcTotalForType, calcNetWorthTotal} from '../services/CalcService.js';
 
@@ -21,7 +21,6 @@ class NetWorth extends Component {
       totalLiabilities: 0.00,
       totalNetWorth: 0.00
     }
-    this.handleCurrencySelect = this.handleCurrencySelect.bind(this); //MARYTODO: CAN THIS BE DONE WITH ARROW FUNCTIONS INSTEAD?
   }
 
   componentDidMount() {
@@ -39,6 +38,8 @@ class NetWorth extends Component {
         totalLiabilities: response[1].total,
         totalNetWorth: response[2].total
       });
+    }).catch((error) => {
+      console.error(`Failed to update totals due to error: ${error}`)
     });
   }
 
@@ -69,7 +70,6 @@ class NetWorth extends Component {
 
   _getLongTermHeaders(type) {
     const longTermHeaders = accountHeaders[type];
-
     return (
       <th key={longTermHeaders.longTerm} colSpan={longTermHeaders.commonColumns.length + 2}>
         {longTermHeaders.longTerm}
@@ -95,8 +95,7 @@ class NetWorth extends Component {
     });
   };
 
-  handleCurrencySelect(eventKey) {
-     //MARYTODO: HANDLE ERRORS
+  handleCurrencySelect = ((eventKey) => {
     const currency = eventKey;
     let baseRate = this.state.baseRate
     if (currencies.includes(currency)) {
@@ -107,15 +106,20 @@ class NetWorth extends Component {
       })
       .then((exchangeRate) => {
         this.updateCurrency(currency, exchangeRate, baseRate);
+      })
+      .catch(() => {
+        console.error("Invalid base rate provided")
       });
     } else {
       console.error(`Invalid currency selected. Must be one of: ${currencies.toString()}`)
     } 
-  };
+  })
+
+  _formatNumber(number) {
+    return new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency}).format(number);
+  }
 
   render() {
-    //MARYTODO: SIMPLIFY headers obj MORE?
-    //MARYTODO: MAKE COLSPAN MORE COMMON EVERYWHERE?
     const headers = {
       shortTermAssets: this._getShortTermHeaders("assets"),
       longTermAssets: this._getLongTermHeaders("assets"),
@@ -135,9 +139,7 @@ class NetWorth extends Component {
           <thead>
             <tr>
               <th>Net Worth</th>
-              {/* MARYTODO: change locale when currency changes */}
-              <th>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency})
-                .format(this.state.totalNetWorth)}</th>
+              <th>{this._formatNumber(this.state.totalNetWorth)}</th>
             </tr>
           </thead>
         </table>
@@ -169,8 +171,7 @@ class NetWorth extends Component {
           <tfoot>
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 1}>Total Assets</td>
-              <td>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency})
-                .format(this.state.totalAssets)}</td>
+              <td>{this._formatNumber(this.state.totalAssets)}</td>
             </tr>
           </tfoot>
         </table>
@@ -202,8 +203,7 @@ class NetWorth extends Component {
           <tfoot>
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 2}>Total Liabilities</td>
-              <td>{new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency})
-                .format(this.state.totalLiabilities)}</td>
+              <td>{this._formatNumber(this.state.totalLiabilities)}</td>
             </tr>
           </tfoot>
         </table>
