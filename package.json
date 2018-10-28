@@ -8,9 +8,12 @@
   },
   "dependencies": {
     "cors": "^2.8.4",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "node-fetch": "^2.2.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "babel-loader": "^8.0.4",
     "concurrently": "^3.5.0"
   }
 }

@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import '../App.css';
 import CurrencyDropdown from './CurrencyDropdown';
 import AccountsTable from './AccountsTable';
-import accounts from '../store/accounts.js'
-import accountHeaders from '../store/accountHeaders.js'
-import {getBaseRate, getExchangeRate} from '../services/CurrencyService.js';
-import {calcTotalForType, calcNetWorthTotal} from '../services/CalcService.js';
+import accountHeaders from './accountHeaders.js'
+import {getData, setCurrency, setAmount} from '../services/NetWorthService.js';
 
 const currencies=["CAD", "USD", "MXN", "EUR", "GBP", "CHF", "SEK", "AUD", "CNY", "JPY"];
 
@@ -14,49 +12,33 @@ class NetWorth extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currency: currencies[0],
-      activeCurrency: "CAD",
-      exchangeRate: 1,
-      totalAssets: 0.00,
-      totalLiabilities: 0.00,
-      totalNetWorth: 0.00
+      accountData: {
+        accounts: {
+          assets: {
+            shortTerm: [],
+            longTerm: []
+          },
+          liabilities: {
+            shortTerm: [],
+            longTerm: []
+          }
+        },
+        totals: {
+          assets: "0.00",
+          liabilities: "0.00",
+          netWorth: "0.00"
+        },
+        currency: currencies[0]
+      }
     }
   }
 
   componentDidMount() {
-    this._updateTotals();
-  }
-
-  _updateTotals() {
-    Promise.all([
-      this._getTotalAssets(),
-      this._getTotalLiabilities(),
-      this._getTotalNetWorth()
-    ]).then((response) => {
+    getData().then((data) => {
       this.setState({
-        totalAssets: response[0].total,
-        totalLiabilities: response[1].total,
-        totalNetWorth: response[2].total
-      });
-    }).catch((error) => {
-      console.error(`Failed to update totals due to error: ${error}`)
+        accountData: data
+      })
     });
-  }
-
-  _getRates() {
-    return {baseRate: this.state.baseRate, rate: this.state.exchangeRate}
-  }
-
-  _getTotalAssets() {
-    return calcTotalForType(accounts.assets, this._getRates());
-  }
-
-  _getTotalLiabilities() {
-    return calcTotalForType(accounts.liabilities, this._getRates());
-  }
-
-  _getTotalNetWorth() {
-    return calcNetWorthTotal(accounts, this._getRates())
   }
 
   _getShortTermHeaders(type) {
@@ -77,46 +59,33 @@ class NetWorth extends Component {
     )
   }
 
-  checkBaseRate() {
-    if (this.state.baseRate) {
-      return Promise.resolve(this.state.baseRate);
-    } else {
-      return getBaseRate();
-    }
-  }
-
-  updateCurrency(currency, exchangeRate, baseRate){
-    this.setState({
-      activeCurrency: currency,
-      exchangeRate: exchangeRate,
-      baseRate: baseRate
-    }, () => {
-      this._updateTotals();
-    });
-  };
-
   handleCurrencySelect = ((eventKey) => {
     const currency = eventKey;
-    let baseRate = this.state.baseRate
     if (currencies.includes(currency)) {
-      this.checkBaseRate()
-      .then((newBaseRate) => {
-        baseRate = newBaseRate;
-        return getExchangeRate(currency);
-      })
-      .then((exchangeRate) => {
-        this.updateCurrency(currency, exchangeRate, baseRate);
-      })
-      .catch(() => {
-        console.error("Invalid base rate provided")
+      setCurrency(currency).then((data) => {
+        this.setState({
+          accountData: data
+        });
       });
     } else {
-      console.error(`Invalid currency selected. Must be one of: ${currencies.toString()}`)
-    } 
+      console.error(`Invalid currency selected: ${currency}. Must be one of ${currencies.toString()}`)
+    }
   })
 
+  handleSetAmount = ((newAccountData) => {
+    if (this.state.accountData.currency !== currencies[0]) {
+      return console.error("Set currency to CAD before updating amounts");
+      // marytodo: add ui to disable edit when currency is not CAD + validations
+    }
+    setAmount(newAccountData).then((data) => {
+      this.setState({
+        accountData: data
+      });
+    })
+  });
+
   _formatNumber(number) {
-    return new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.activeCurrency}).format(number);
+    return new Intl.NumberFormat("en-CA", {style: "currency", currency: this.state.accountData.currency}).format(number);
   }
 
   render() {
@@ -127,19 +96,20 @@ class NetWorth extends Component {
       longTermLiabilities: this._getLongTermHeaders("liabilities")
     }
 
+    //marytodo: re-use the header names better? Maybe function that sets it all up for <AccountsTable />
     return (
       <div>
         <h2>Tracking your Networth</h2>
         <CurrencyDropdown 
           currencies={currencies} 
-          activeCurrency={this.state.activeCurrency} 
+          activeCurrency={this.state.accountData.currency} 
           handleCurrencySelect={this.handleCurrencySelect}
         />
         <table className="table">
           <thead>
             <tr>
               <th>Net Worth</th>
-              <th>{this._formatNumber(this.state.totalNetWorth)}</th>
+              <th>{this._formatNumber(this.state.accountData.totals.netWorth)}</th>
             </tr>
           </thead>
         </table>
@@ -156,8 +126,11 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
-            {...this.state}
-            accounts={accounts.assets.shortTerm}
+            currency={this.state.accountData.currency}
+            type={"assets"}
+            term={"shortTerm"}
+            accounts={this.state.accountData.accounts.assets.shortTerm}
+            handleSetAmount={this.handleSetAmount}
           />
           <tbody>
             <tr>
@@ -165,13 +138,16 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
-            {...this.state}
-            accounts={accounts.assets.longTerm}
+            currency={this.state.accountData.currency}
+            type={"assets"}
+            term={"longTerm"}
+            accounts={this.state.accountData.accounts.assets.longTerm}
+            handleSetAmount={this.handleSetAmount}
           />
           <tfoot>
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 1}>Total Assets</td>
-              <td>{this._formatNumber(this.state.totalAssets)}</td>
+              <td>{this._formatNumber(this.state.accountData.totals.assets)}</td>
             </tr>
           </tfoot>
         </table>
@@ -188,8 +164,11 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
-            {...this.state}
-            accounts={accounts.liabilities.shortTerm}
+            currency={this.state.accountData.currency}
+            type={"liabilities"}
+            term={"shortTerm"}
+            accounts={this.state.accountData.accounts.liabilities.shortTerm}
+            handleSetAmount={this.handleSetAmount}
           />
           <tbody>
             <tr>
@@ -197,13 +176,16 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
-              {...this.state}
-              accounts={accounts.liabilities.longTerm}
+              currency={this.state.accountData.currency}
+              type={"assets"}
+              term={"longTerm"}
+              accounts={this.state.accountData.accounts.liabilities.longTerm}
+              handleSetAmount={this.handleSetAmount}
             />
           <tfoot>
             <tr>
               <td colSpan={accountHeaders.assets.commonColumns.length + 2}>Total Liabilities</td>
-              <td>{this._formatNumber(this.state.totalLiabilities)}</td>
+              <td>{this._formatNumber(this.state.accountData.totals.liabilities)}</td>
             </tr>
           </tfoot>
         </table>

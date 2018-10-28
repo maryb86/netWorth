@@ -1,4 +1,4 @@
-exports.calcTotalForType = function(accounts, rates) {
+exports.calcTotalForType = function(accounts) {
   const amounts = [0.00];
   let total = amounts[0];
   if (accounts) {
@@ -20,17 +20,16 @@ exports.calcTotalForType = function(accounts, rates) {
     }
   }
 
-  return _convert(total, rates).toFixed(2);
+  return total;
 }
 
-exports.calcNetWorthTotal = function(accounts, rates) {
+exports.calcNetWorthTotal = function(accounts) {
   const assets = accounts && accounts.assets ? this.calcTotalForType(accounts.assets) : 0.00;
   const liabilities = accounts && accounts.liabilities ? this.calcTotalForType(accounts.liabilities) : 0.00;
-
-  return _convert((assets - liabilities), rates).toFixed(2);
+  return (assets - liabilities);
 }
 
-function _convert(amount = 0, rates) {
+exports.convert = function(amount = 0, rates) {
   // convert to euro first...
   const baseAmount = amount * ((rates && rates.baseRate) || 1);
   // then to the new rate
