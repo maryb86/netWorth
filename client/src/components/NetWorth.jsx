@@ -36,9 +36,18 @@ class NetWorth extends Component {
   componentDidMount() {
     getData().then((data) => {
       this.setState({
-        accountData: data
+        accountData: data,
+        editable: data.currency === currencies[0]
       })
     });
+  }
+
+  componentDidUpdate(prevProps, previousState) {
+    if (previousState.accountData.currency !== this.state.accountData.currency) {
+      this.setState({
+        editable: this.state.accountData.currency === currencies[0]
+      })
+    }
   }
 
   _getShortTermHeaders(type) {
@@ -73,9 +82,9 @@ class NetWorth extends Component {
   })
 
   handleSetAmount = ((newAccountData) => {
+    console.log(newAccountData);
     if (this.state.accountData.currency !== currencies[0]) {
       return console.error("Set currency to CAD before updating amounts");
-      // marytodo: add ui to disable edit when currency is not CAD + validations
     }
     setAmount(newAccountData).then((data) => {
       this.setState({
@@ -126,6 +135,7 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
+            editable={this.state.editable}
             currency={this.state.accountData.currency}
             type={"assets"}
             term={"shortTerm"}
@@ -138,6 +148,7 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
+            editable={this.state.editable}
             currency={this.state.accountData.currency}
             type={"assets"}
             term={"longTerm"}
@@ -164,6 +175,7 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
+            editable={this.state.editable}
             currency={this.state.accountData.currency}
             type={"liabilities"}
             term={"shortTerm"}
@@ -176,8 +188,9 @@ class NetWorth extends Component {
             </tr>
           </tbody>
           <AccountsTable
+              editable={this.state.editable}
               currency={this.state.accountData.currency}
-              type={"assets"}
+              type={"liabilities"}
               term={"longTerm"}
               accounts={this.state.accountData.accounts.liabilities.longTerm}
               handleSetAmount={this.handleSetAmount}

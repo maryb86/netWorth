@@ -131,7 +131,7 @@ class NetWorthData {
                 console.error(`Error when setting exchange rates: ${error}`);
             });
         } else {
-            return this.getAccountData();
+            return Promise.resolve(this.getAccountData());
         }
     }
 
